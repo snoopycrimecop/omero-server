@@ -1,5 +1,5 @@
 /*
- *   Copyright 2006-2018 University of Dundee. All rights reserved.
+ *   Copyright 2006-2019 University of Dundee. All rights reserved.
  *   Use is subject to license terms supplied in LICENSE.txt
  */
 
@@ -45,6 +45,7 @@ import ome.security.policy.DefaultPolicyService;
 import ome.security.policy.PolicyService;
 import ome.services.messages.EventLogMessage;
 import ome.services.messages.EventLogsMessage;
+import ome.services.sessions.SessionContext;
 import ome.services.sessions.SessionManager;
 import ome.services.sessions.SessionProvider;
 import ome.services.sessions.SessionProviderInMemory;
@@ -372,6 +373,17 @@ public class BasicSecuritySystem implements SecuritySystem,
                 throw ste;
             }
             ec = (EventContext) ste.sessionContext;
+        }
+
+        // Ensure that sudoer has name loaded for SimpleEventContext.copy
+        if (ec instanceof SessionContext) {
+            final ome.model.meta.Session session = ((SessionContext) ec).getSession();
+            Experimenter sudoer = session.getSudoer();
+            if (!(sudoer == null || sudoer.isLoaded())) {
+                // Could be in read-only mode.
+                sudoer = admin.userProxy(sudoer.getId());
+                session.setSudoer(sudoer);
+            }
         }
 
         // Refill current details
