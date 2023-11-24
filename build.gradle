@@ -26,9 +26,9 @@ ext {
 dependencies {
     testImplementation("org.testng:testng:7.5")
     testImplementation("jmock:jmock:1.+")
-    testImplementation('org.openmicroscopy:omero-common-test:5.6.3')
+    testImplementation('org.openmicroscopy:omero-common-test:5.6.4-SNAPSHOT')
 
-    api('org.openmicroscopy:omero-renderer:5.5.14')
+    api('org.openmicroscopy:omero-renderer:5.5.15-SNAPSHOT')
 
     // Spring framework stuff
     implementation("org.springframework:spring-context-support:4.3.14.RELEASE")
